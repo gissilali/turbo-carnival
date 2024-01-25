@@ -1,2 +1,4 @@
 backend/vendor/
 backend/database.*
+frontend/node_modules
+node_modules/
