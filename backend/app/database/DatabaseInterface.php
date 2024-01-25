@@ -6,5 +6,5 @@ interface DatabaseInterface
 {
     public function fetchAll(): array;
 
-    public function update(): array;
+    public function createOrUpdate(array $data): array;
 }
