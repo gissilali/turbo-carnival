@@ -9,19 +9,22 @@ use App\Routing\RouterNotFoundException;
 use App\UsersController;
 
 
+putenv("DATABASE=" . __DIR__ . "/database.txt");
+
+
 
 $router = new Router();
 
-$router->get("/", function () {
+$router->get("/users", function () {
     return (new UsersController(new TextDatabase()))->index();
 });
 
-$router->post("/", function () {
-    return (new UsersController(new TextDatabase()))->update();
+$router->post("/users", function (array $requestData) {
+    return (new UsersController(new TextDatabase()))->update($requestData);
 });
 
 try {
-    echo $router->resolve($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+    echo $router->resolve();
 } catch (RouterNotFoundException $e) {
     echo json_encode(['message' => $e->getMessage()]);
 }

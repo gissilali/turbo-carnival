@@ -24,13 +24,35 @@ class Router
         return $this;
     }
 
-    public function resolve(string $requestUri, string $requestMethod)
+    public function resolve()
     {
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
         [$route] = explode("?", $requestUri);
         $handler = $this->routes[$requestMethod][$route] ?? null;
+        $data = [];
+
+        if ($requestMethod == "POST") {
+            $rawData = file_get_contents("php://input");
+
+            $data = array_merge(
+                $_POST,
+                json_decode($rawData, true)
+            );
+        }
+
+        if ($requestMethod == "GET") {
+            $data = $_GET;
+        }
 
         if ($handler && is_callable($handler)) {
-            return call_user_func($handler, $route);
+            return match ($requestMethod) {
+                "GET" => call_user_func($handler, $data),
+                "POST" => call_user_func(
+                    $handler,
+                    $data,
+                )
+            };
         } else {
             throw new RouterNotFoundException("Route '$requestMethod $requestUri' not found");
         }
