@@ -5,7 +5,7 @@ export default class {
     document.title = title;
   }
 
-  renderView() {
+  async renderView() {
     return `
       <h1>${document.title}</h1>
     `;

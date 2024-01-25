@@ -43,7 +43,7 @@ const registerFormHandlers = async () => {
     ?.addEventListener("submit", new Register().submitForm);
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  router();
+document.addEventListener("DOMContentLoaded", async () => {
+  await router();
   registerFormHandlers();
 });
