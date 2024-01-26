@@ -1,19 +1,28 @@
-# Use an official PHP runtime as a parent image
-FROM php:8.1-apache
+FROM php:8.2-apache
 
-# Set the working directory in the container
+# Install supervisord
+RUN apt-get update && apt-get install -y supervisor
+
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy your PHP application code into the container
-COPY . .
+# Copy the application files to the container
+COPY . /var/www/html
 
-# Install PHP extensions and other dependencies
-RUN apt-get update && \
-    apt-get install -y libpng-dev && \
-    docker-php-ext-install pdo pdo_mysql gd
+# Enable Apache mod_rewrite for URL rewrites
+RUN a2enmod rewrite
 
-# Expose the port Apache listens on
-EXPOSE 80
+# Change the ownership of the application files
+RUN chown -R www-data:www-data /var/www/html
 
-# Start Apache when the container runs
-CMD ["apache2-foreground"]
+# Copy the supervisord configuration file into the container
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+CMD [ "php", "-S", "0.0.0.0:8000" ]
+
+
+# Expose port 80
+EXPOSE 8080
+
+# Start supervisord
+# CMD ["/usr/bin/supervisord"]
