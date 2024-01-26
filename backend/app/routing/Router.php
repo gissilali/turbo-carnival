@@ -32,6 +32,7 @@ class Router
         $handler = $this->routes[$requestMethod][$route] ?? null;
         $data = [];
 
+
         if ($requestMethod == "POST") {
             $rawData = file_get_contents("php://input");
 

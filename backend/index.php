@@ -28,6 +28,10 @@ $router->post("/users", function (array $requestData) {
     return (new UsersController(new TextDatabase()))->update($requestData);
 });
 
+$router->get("/getUserByEmail", function (array $requestData) {
+    return (new UsersController(new TextDatabase()))->findUserByEmail($requestData['email']);
+});
+
 try {
     echo $router->resolve();
 } catch (RouterNotFoundException $e) {
