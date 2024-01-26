@@ -40,8 +40,28 @@ export default class UserDetails extends BaseComponent {
       `;
     }
     return /*html*/ `
-        <div>
-            ${user.name}
+        <div class="user-details">
+            <div class="avatar">
+              ${user.name.at(0)}
+            </div>
+            <div class="bio">
+                <div class="user-name">${user.name}</div>
+                <div class="user-email">${user.email}</div>
+            </div>
+            <div class="details">
+              <div class="detail">
+                <span class="title">User Agent</span>
+                <span class="info">${user.user_agent}</span>
+              </div>
+              <div class="detail">
+              <span class="title">Entrance Time</span>
+              <span class="info">${user.entrance_time}</span>
+            </div>
+            <div class="detail">
+            <span class="title">Visit Count</span>
+            <span class="info">${user.visit_count || 0}</span>
+          </div>
+            </div>
         </div>
     `;
   }

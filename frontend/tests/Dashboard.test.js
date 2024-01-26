@@ -35,6 +35,8 @@ describe("Dashboard", () => {
     const view = await dashboard.renderView();
     expect(view).toContain("Test User");
     expect(view).toContain("testuser@example.com");
+    expect(view).toContain("192.0.2.0");
+    expect(view).toContain("2024-01-25T21:49:30Z");
   });
 
   it("renders the error message correctly", async () => {

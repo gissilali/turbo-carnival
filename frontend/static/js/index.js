@@ -40,10 +40,8 @@ const router = async () => {
 
 const registerEventHandlers = async () => {
   const registerForm = document.getElementById("registerForm");
-  const userTableRow = document.querySelectorAll("tr.user-row");
   let modal = document.querySelector(".modal");
   let closeModalButton = document.querySelector(".close");
-  let modalContent = document.getElementById("modal-content");
 
   registerForm?.addEventListener("submit", new Register().submitForm);
 
@@ -51,14 +49,7 @@ const registerEventHandlers = async () => {
     modal.classList.remove("show-modal");
   });
 
-  userTableRow.forEach((element) => {
-    element.addEventListener("click", async (event) => {
-      const email = event.target.parentElement.getAttribute("data-id");
-      const userDetails = new UserDetails({ email });
-      modalContent.innerHTML = await userDetails.renderView();
-      modal.classList.add("show-modal");
-    });
-  });
+  new Dashboard().attachEventHandlers();
 
   window.onbeforeunload = function (e) {
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));

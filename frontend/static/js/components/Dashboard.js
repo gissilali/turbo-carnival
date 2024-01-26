@@ -1,5 +1,6 @@
 import config from "../config.js";
 import BaseComponent from "./BaseComponent.js";
+import UserDetails from "./UserDetails.js";
 
 export default class Dashboard extends BaseComponent {
   constructor() {
@@ -43,7 +44,23 @@ export default class Dashboard extends BaseComponent {
       const onlineUserList =
         JSON.parse(localStorage.getItem("onlineUserList")) || [];
       table.innerHTML = this.renderUserList(users, onlineUserList);
+      this.attachEventHandlers();
     }
+  }
+
+  attachEventHandlers() {
+    const userTableRow = document.querySelectorAll("tr.user-row");
+    let modalContent = document.getElementById("modal-content");
+    let modal = document.querySelector(".modal");
+
+    userTableRow.forEach((element) => {
+      element.addEventListener("click", async (event) => {
+        const email = event.target.parentElement.getAttribute("data-id");
+        const userDetails = new UserDetails({ email });
+        modalContent.innerHTML = await userDetails.renderView();
+        modal.classList.add("show-modal");
+      });
+    });
   }
 
   renderUserList(users, onlineUserList) {
@@ -54,7 +71,7 @@ export default class Dashboard extends BaseComponent {
         <tr class="user-row" data-id="${user.email}">
           <td>${user.name} | ${user.email}</td>
           <td>${user.entrance_time}</td>
-          <td>${user.last_update}</td>
+          <td>${user.last_update_time}</td>
           <td>${user.ip_address}</td>
           <td>
             <span class="badge  ${isOnline ? "online" : "offline"}">
@@ -122,7 +139,7 @@ export default class Dashboard extends BaseComponent {
                 <div class="card-content">
                     <div class="table-wrapper">
                     <div >
-                    <table id="usersTable" class="clickable">
+                    <table  class="clickable">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -132,7 +149,7 @@ export default class Dashboard extends BaseComponent {
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="usersTable">
                         ${this.renderUserList(users, onlineUserList)}
                     </tbody>
                 </table>
