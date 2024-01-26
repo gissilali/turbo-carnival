@@ -40,7 +40,7 @@ class UsersController
             "ip_address" => Utils::getUserIP(),
             "user_agent" => Utils::getUserAgent(),
             "entrance_time" => date('Y-m-d H:i:s'),
-            "last_update_time" => date('Y-m-d H:i:s')
+            "last_update_time" => date('Y-m-d H:i:s'),
         ]);
 
         $user = null;

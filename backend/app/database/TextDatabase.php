@@ -67,9 +67,19 @@ class TextDatabase implements DatabaseInterface
     private function addIfNotExists(array $newRow, array $existingData): array
     {
         if (!$this->userExists($existingData, $newRow['email'])) {
+            $newRow['visit_count'] = 1;
             array_push($existingData, $newRow);
             return $existingData;
         }
+
+
+        $existingData = array_map(function ($row) use ($newRow) {
+            if ($newRow['email'] == $row['email']) {
+                $row['visit_count'] = $row['visit_count'] + 1;
+            }
+            return $row;
+        }, $existingData);
+
 
         return $existingData;
     }
