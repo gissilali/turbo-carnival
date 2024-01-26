@@ -4,6 +4,9 @@ import BaseComponent from "./BaseComponent.js";
 export default class UserDetails extends BaseComponent {
   constructor(props) {
     super(props);
+    if (!props || !props.email) {
+      throw new Error("Props or props.email is not defined");
+    }
   }
 
   async fetchUser() {
@@ -22,16 +25,21 @@ export default class UserDetails extends BaseComponent {
     return data;
   }
 
-  async renderView() {
+  async getUser() {
     let user;
     let errorMessage;
+
     try {
       user = await this.fetchUser();
-      console.log(user);
     } catch (error) {
       errorMessage = "Failed to fetch user.";
     }
 
+    return { user, errorMessage };
+  }
+
+  async renderView() {
+    const { user, errorMessage } = await this.getUser();
     if (errorMessage) {
       return /*html*/ `
       <div>

@@ -29,7 +29,6 @@ export default class Dashboard extends BaseComponent {
     try {
       users = await this.fetchUsers();
     } catch (error) {
-      console.error(error);
       errorMessage = "Failed to fetch users.";
     }
 
