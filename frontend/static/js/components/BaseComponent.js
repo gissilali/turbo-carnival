@@ -1,5 +1,9 @@
 export default class {
-  constructor() {}
+  props;
+
+  constructor(props = {}) {
+    this.props = props;
+  }
 
   setTitle(title) {
     document.title = title;

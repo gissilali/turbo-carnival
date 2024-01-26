@@ -5,6 +5,7 @@ export default class Dashboard extends BaseComponent {
   constructor() {
     super();
     this.setTitle("Dashboard");
+    this.intervalId = null;
   }
 
   async fetchUsers() {
@@ -20,14 +21,54 @@ export default class Dashboard extends BaseComponent {
     return data;
   }
 
-  async renderView() {
+  async getUsers() {
     let users;
     let errorMessage;
+
     try {
       users = await this.fetchUsers();
     } catch (error) {
+      console.error(error);
       errorMessage = "Failed to fetch users.";
     }
+
+    return { users, errorMessage };
+  }
+
+  async refreshView() {
+    const { users, errorMessage } = await this.getUsers();
+
+    const table = document.getElementById("usersTable");
+    if (table) {
+      const onlineUserList =
+        JSON.parse(localStorage.getItem("onlineUserList")) || [];
+      table.innerHTML = this.renderUserList(users, onlineUserList);
+    }
+  }
+
+  renderUserList(users, onlineUserList) {
+    return users
+      .map((user) => {
+        const isOnline = onlineUserList.includes(user.email);
+        return /*html*/ `
+        <tr class="user-row" data-id="${user.email}">
+          <td>${user.name} | ${user.email}</td>
+          <td>${user.entrance_time}</td>
+          <td>${user.last_update}</td>
+          <td>${user.ip_address}</td>
+          <td>
+            <span class="badge  ${isOnline ? "online" : "offline"}">
+            ${isOnline ? "online" : "offline"}
+            </span>
+          </td>
+        </tr>
+      `;
+      })
+      .join("");
+  }
+
+  async renderView() {
+    const { users, errorMessage } = await this.getUsers();
 
     if (errorMessage) {
       return /*html*/ `
@@ -37,37 +78,70 @@ export default class Dashboard extends BaseComponent {
       `;
     }
 
-    let userList = users
-      .map(
-        (user) => /*html*/ `
-        <tr>
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>${user.ip_address}</td>
-          <td>${user.user_agent}</td>
-          <td>${user.entrance_time}</td>
-        </tr>
-      `
-      )
-      .join("");
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    let greeting = `<h1>Welcome</h1>`;
+
+    const onlineUserList =
+      JSON.parse(localStorage.getItem("onlineUserList")) || [];
+
+    if (currentUser) {
+      greeting = `<h1>Welcome, ${currentUser.name}</h1>`;
+      onlineUserList.push(currentUser.email);
+    }
+
+    localStorage.setItem("onlineUserList", JSON.stringify(onlineUserList));
+
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+
+    this.intervalId = setInterval(async () => {
+      await this.refreshView();
+    }, 3000);
 
     return /*html*/ `
       <div>
-        <h1>Online Users</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>User Agent</th>
-              <th>Entrance Time</th>
-              <th>Visit Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${userList}
-          </tbody>
-        </table>
+        <header class="header">
+            <div class="header-content container mx-auto">
+                <a class="logo" href="/dashboard">
+                    <img src="../../../static/images/logo-full.png" alt="" />
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">G</div>
+                    <span class="user-name">Gibson Silali</span>
+                </div>
+            </div>
+        </header>
+        <div class="container mx-auto body-content">
+            ${greeting}
+            <div class="content-header">
+              <h2>Users</h2>
+              <a target="_blank" href="/">New Registration</a>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <div class="table-wrapper">
+                    <div >
+                    <table id="usersTable" class="clickable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Last Update Time</th>
+                            <th>Entrance Time</th>
+                            <th>User IP</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${this.renderUserList(users, onlineUserList)}
+                    </tbody>
+                </table>
+                    </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
     `;
   }

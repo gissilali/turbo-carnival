@@ -25,7 +25,15 @@ export default class Register extends BaseComponent {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        const onlineUserList =
+          JSON.parse(localStorage.getItem("onlineUserList")) || [];
+        console.log({ onlineUserList });
+        onlineUserList.push(data.email);
+        localStorage.setItem("onlineUserList", JSON.stringify(onlineUserList));
+
+        //tracking the current user per tab
+        sessionStorage.setItem("currentUser", JSON.stringify(data));
+
         navigateTo("/dashboard");
       })
       .catch((error) => console.error("Error:", error));
@@ -34,21 +42,32 @@ export default class Register extends BaseComponent {
   renderView() {
     return /*html*/ `
       <div>
-        <h2>Register to start</h2>
-        <div>
-          <form id="registerForm" method="POST">
-            <div>
+      <header class="header">
+            <div class="header-content container mx-auto">
+                <a class="logo" href="/dashboard">
+                    <img src="../../../static/images/logo-full.png" alt="" />
+                </a>
+            </div>
+        </header>
+        <div class="container mx-auto">
+            <div class="card sm mx-auto" style="margin-top:3rem">
+            <div class="form-wrapper">
+            <form class="form" id="registerForm" method="POST">
+            <h3>Register to Start</h3>
+            <div class="form-group">
               <label>Name</label>
-              <input type="text" required name="name" id="name">
+              <input class="form-control" type="text" required name="name" id="name">
             </div>
-            <div>
+            <div class="form-group">
               <label>Email</label>
-              <input type="email" required name="email" id="email">
+              <input class="form-control" type="email" required name="email" id="email">
             </div>
             <div>
-              <button type="submit">Start</button>
+              <button class="btn" type="submit">Start</button>
             </div>
           </form>
+          </div>
+            </div>
         </div>
       </div>
     `;
