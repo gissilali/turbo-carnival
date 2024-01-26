@@ -9,3 +9,9 @@ A JavaScript application that shows current online users.
 - **Unit tests** - jest
 
 ![Screenshot](./screenshots.png "Screenshot")
+
+## User online status tracking
+
+I use localStorage and sessionStorage to track the online status of users.
+All online users are stored in the `localStorage` and on tab closure, they are removed from `localStorage`.
+`sessionStorage` is used to track the current user.
