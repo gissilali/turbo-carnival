@@ -19,3 +19,11 @@ All online users are stored in the `localStorage` and on tab closure, they are r
 ## Live demo
 
 You can find the live demo Here at [https://oblong-turnip-frontend.fly.dev/](https://oblong-turnip-frontend.fly.dev/).
+
+## Usage
+
+- To start using this application go to [https://oblong-turnip-frontend.fly.dev/](https://oblong-turnip-frontend.fly.dev/).
+- You will be directed to a registration page, where you are prompted for a name and email.
+- On successful registration you will be redirected to the dashboard, where you will find a list of users with their online statuses.
+- To register as another user click on the `New Registration` link, this will open a new tab allowing you to test the application.
+- You can click on a table row to open a modal that shows user details
