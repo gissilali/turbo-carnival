@@ -27,3 +27,12 @@ You can find the live demo Here at [https://oblong-turnip-frontend.fly.dev/](htt
 - On successful registration you will be redirected to the dashboard, where you will find a list of users with their online statuses.
 - To register as another user click on the `New Registration` link, this will open a new tab allowing you to test the application.
 - You can click on a table row to open a modal that shows user details
+
+## Directories
+
+`backend` - contains the PHP REST API for updating and fetching users
+`frontend` - contains a javascript application served by on nodejs server.
+
+## Hosting
+
+The app is hosted on Fly.io
